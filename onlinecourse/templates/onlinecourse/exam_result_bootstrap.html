@@ -36,20 +36,47 @@
 </nav>
 
 <div class="container-fluid">
-    {% if grade > 80 %}
+    {% if total_score > 80 %}
     <div class="alert alert-success">
-       <!--HINT Display passed info -->
+        Congratulations! You've passed the exam with a score of {{ total_score }}.
     </div>
-        {% else %}
-        <div class="alert alert-danger">
-            <!--HINT Display failed info -->
-        </div>
-        <a class="btn btn-link text-danger" href="{% url 'onlinecourse:course_details' course.id %}">Re-test</a>
-        {% endif %}
-        <div class="card-columns-vertical mt-1">
+    {% else %}
+    <div class="alert alert-danger">
+        Sorry, you've failed the exam with a score of {{ total_score }}. Please try again.
+    </div>
+    <a class="btn btn-link text-danger" href="{% url 'onlinecourse:course_details' course.id %}">Re-test</a>
+    {% endif %}
+    <div class="card-columns-vertical mt-1">
         <h5 class="">Exam results</h5>
-            <!--HINT Display exam results-->
-        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Question</th>
+                    <th>Your Answer</th>
+                    <th>Correct Answer</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in question_results %}
+                <tr>
+                    <td>{{ result.question.content }}</td>
+                    <td>
+                        {% for choice in result.selected_choices %}
+                        {{ choice.content }}<br>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for choice in result.correct_choices %}
+                        {{ choice.content }}<br>
+                        {% endfor %}
+                    </td>
+                    <td>{{ result.score }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+</div>
 </body>
 </html>
